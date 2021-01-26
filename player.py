@@ -100,13 +100,20 @@ class PlayerControllerMinimax(PlayerController):
 
         t1 = time.time()
 
-        time.sleep(0.05)
+        children = initial_tree_node.compute_and_get_children()
 
-        //How to implement timeout? Maybe signals?
+        next_state = initial_tree_node.compute_next_state(initial_tree_node, 3, initial_tree_node.observations)
+
+        print(next_state)
+        print(children)
+
+        # len(children) appears to be always 5.
+
+        #How to implement timeout? Maybe signals?
 
         t2 = time.time()
 
-        print("Total runtime: {}".format(t2-t1))
+        print("Total runtime: {:.2f}ms".format((t2-t1)*1000))
 
 
 
