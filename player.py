@@ -6,6 +6,22 @@ from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
 
+def compute_heuristic(node):
+    """
+    Compute a heuristic score value for a given node.
+    :param node: Tree node
+    :type node: game_tree.Node
+        (see the Node class in game_tree.py for more information!)
+    :return: score value (should be positive if Node is good for MAX)
+    :rtype: int
+    """
+    print("Player is: ")
+    print(node.state.get_player())
+
+    print("Hook positions: ")
+    print(node.state.get_hook_positions())
+
+    return None
 
 class PlayerControllerHuman(PlayerController):
     def player_loop(self):
@@ -29,6 +45,8 @@ class PlayerControllerMinimax(PlayerController):
 
     def __init__(self):
         super(PlayerControllerMinimax, self).__init__()
+
+    
 
     def player_loop(self):
         """
@@ -79,6 +97,8 @@ class PlayerControllerMinimax(PlayerController):
 
         return None
 
+    
+
     def search_best_next_move(self, model, initial_tree_node):
         """
         Use your minimax model to find best possible next move for player 0 (green boat)
@@ -100,12 +120,17 @@ class PlayerControllerMinimax(PlayerController):
 
         t1 = time.time()
 
-        children = initial_tree_node.compute_and_get_children()
+        
 
-        next_state = initial_tree_node.compute_next_state(initial_tree_node, 3, initial_tree_node.observations)
+        initial_tree_node.compute_and_get_children()
 
-        print(next_state)
-        print(children)
+        for child in initial_tree_node.children:
+            compute_heuristic(child)
+
+        #next_state = initial_tree_node.compute_next_state(initial_tree_node, 3, initial_tree_node.observations)
+
+        #print(next_state)
+        #print(children)
 
         # len(children) appears to be always 5.
 
@@ -119,3 +144,5 @@ class PlayerControllerMinimax(PlayerController):
 
         # 0: "stay", 1: "up", 2: "down", 3: "left", 4: "right"
         return ACTION_TO_STR[random_move]
+
+    
