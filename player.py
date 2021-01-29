@@ -18,10 +18,40 @@ def compute_heuristic(node):
     print("Player is: ")
     print(node.state.get_player())
 
+    """
+    [(0,19)        (19,19)]
+    [                     ] Possible positions
+    [(0,0)          (19,0)]
+    """
+
     print("Hook positions: ")
     print(node.state.get_hook_positions())
 
-    return None
+    print("Fish positions: ")
+    fish_positions = node.state.get_fish_positions()
+    print(fish_positions)
+
+    print("Fish scores: ")
+    fish_scores = node.state.get_fish_scores()
+    print(fish_scores)
+
+    for idx, score in enumerate(fish_scores):
+        print(idx)
+        print(score)
+        print(fish_positions[score])
+
+
+
+
+    #   Score value is MAX_score - MIN_score.
+    score_value = node.state.get_player_scores()[0] - node.state.get_player_scores()[1]
+
+
+
+
+
+
+    return score_value
 
 class PlayerControllerHuman(PlayerController):
     def player_loop(self):
