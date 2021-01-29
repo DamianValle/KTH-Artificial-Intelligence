@@ -53,6 +53,41 @@ def compute_heuristic(node):
 
     return score_value
 
+def alphabeta(node, depth, alpha, beta, player):
+    """
+        Function that performs alphabeta search.
+        :return: The minimax value of the node state.
+        :rtype: str
+    """
+
+    if(depth = 0): #still need to add the terminal state case. (mu(node.state)==null)
+        v = heuristic(node)
+    elif(player==0):
+        #   MAX player
+        v = -999999
+
+        node.compute_and_get_children()
+
+        for child in node.children: #   might be compressible by only the compute_and_get_children() function
+            v = max(v, alphabeta(child, depth-1, alpha, beta, player=1))
+            alpha = max(alpha, v)
+            if(beta <= alpha):
+                break
+
+    elif(player==1):
+        #   Min player
+        v = 999999
+
+        node.compute_and_get_children()
+
+        for child in node.children: #   might be compressible by only the compute_and_get_children() function
+            v = min(v, alphabeta(child, depth-1, alpha, beta, player=0))
+            beta = min(beta, v)
+            if(beta <= alpha):
+                break
+
+    return v
+
 class PlayerControllerHuman(PlayerController):
     def player_loop(self):
         """
