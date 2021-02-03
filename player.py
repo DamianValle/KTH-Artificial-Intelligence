@@ -83,30 +83,41 @@ class PlayerControllerMinimax(PlayerController):
 
         h = scores[0] - scores[1]
 
+        # score / distance to closest fish
+
         return h
 
-    def alphabeta(self, alpha, beta, node, depth, player, start, seen_nodes):
+    def alphabeta(self, alpha, beta, node, depth, player, seen_nodes):
         """
         Performs the alpha beta pruning search algorithm
         """
 
+        #print("alphabeta with depth:{}, player:{}.".format(depth, player))
         hash = self.hash_state(node.state)
         if(hash in seen_nodes):
             return seen_nodes[hash]
 
         #children = sorted(node.state.compute_and_get_children(), key=heuristic, reverse=True)
-        children = node.state.compute_and_get_children()
+        children = node.compute_and_get_children()
 
         if(depth == 0 or not children):
             v = self.heuristic(node.state)
         elif player == 0:
-            pass
+            v = float('-inf')
+            for child in children:
+                v = max(v, self.alphabeta(alpha, beta, child, depth - 1, 1, seen_nodes))
+                alpha = max(alpha, v)
+                if(alpha >= beta):
+                    break
         else:
-            pass
+            v = float('inf')
+            for child in children:
+                v = min(v, self.alphabeta(alpha, beta, child, depth-1, 0, seen_nodes))
+                beta = min(beta, v)
+                if(alpha >= beta):
+                    break
 
-
-        seen_nodes[hash] = v
-
+        #seen_nodes[hash] = v
         return v
 
     def hash_state(self, state):
@@ -117,26 +128,27 @@ class PlayerControllerMinimax(PlayerController):
         :return: Hash of the state
         :rtype: str
         """
-
+        #   Preguntandome si necesitamos el player o los hook positions del otro
+        #   Probablemente si pero que mas da, mas rapido
         return str(state.player) + str(state.get_fish_positions()) + str(state.get_hook_positions())
 
-    def check_timeout(self, start):
+    def check_timeout(self, initial_time):
         """
         Raises a TimeoutError exception if the search time has exceeded 50ms
         """
 
-        if(time.time()-start > 0.05):
+        if(time.time()-initial_time > 0.05):
             raise TimeoutError
 
-    def depth_search(self, node, depth, start, seen_nodes):
+    def depth_search(self, node, depth, initial_time, seen_nodes):
         """
         Performs an alpha-beta pruning search for depth layers
         :param node: Root node
         :type node: game_tree.Node
         :param depth: Number of layers deep to search
         :type depth: int
-        :param start: Start time of the search
-        :type start: datetime.time
+        :param initial_time: initial_time time of the search
+        :type initial_time: datetime.time
         :param seen_nodes: Already visited nodes
         :type seen_nodes: dict
         :return: Encoded move that leads to the best scoring node
@@ -150,8 +162,8 @@ class PlayerControllerMinimax(PlayerController):
         scores = []
 
         for child in children:
-            self.check_timeout(start) 
-            score = self.alphabeta(alpha, beta, child, depth, node.player, start, seen_nodes)
+            self.check_timeout(initial_time)
+            score = self.alphabeta(alpha, beta, child, depth, node.player, seen_nodes)
             scores.append(score)
 
         best_score_idx = scores.index(max(scores))
@@ -175,13 +187,16 @@ class PlayerControllerMinimax(PlayerController):
         seen_nodes = dict() # Maybe put move this to depth search to make it clean.
         depth = 0
         timeout = False
+        best_move = 0
 
         while not timeout:
             try:
-                best_move = self.depth_search(initial_tree_node, depth, seen_nodes, initial_time)
+                print(depth)
+                best_move = self.depth_search(initial_tree_node, depth, initial_time, seen_nodes)
                 seen_nodes.clear()
                 depth+=1
             except:
+                print("timeout")
                 timeout = True
 
         # 0: "stay", 1: "up", 2: "down", 3: "left", 4: "right"
