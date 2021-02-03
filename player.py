@@ -1,92 +1,12 @@
 #!/usr/bin/env python3
 import random
 import time
+import math
 
 from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
 
-def compute_heuristic(node):
-    """
-    Compute a heuristic score value for a given node.
-    :param node: Tree node
-    :type node: game_tree.Node
-        (see the Node class in game_tree.py for more information!)
-    :return: score value (should be positive if Node is good for MAX)
-    :rtype: int
-    """
-    print("Player is: ")
-    print(node.state.get_player())
-
-    """
-    [(0,19)        (19,19)]
-    [                     ] Possible positions
-    [(0,0)          (19,0)]
-    """
-
-    print("Hook positions: ")
-    print(node.state.get_hook_positions())
-
-    print("Fish positions: ")
-    fish_positions = node.state.get_fish_positions()
-    print(fish_positions)
-
-    print("Fish scores: ")
-    fish_scores = node.state.get_fish_scores()
-    print(fish_scores)
-
-    for idx, score in enumerate(fish_scores):
-        print(idx)
-        print(score)
-        print(fish_positions[score])
-
-
-
-
-    #   Score value is MAX_score - MIN_score.
-    score_value = node.state.get_player_scores()[0] - node.state.get_player_scores()[1]
-
-
-
-
-
-
-    return score_value
-
-def alphabeta(node, depth, alpha, beta, player):
-    """
-        Function that performs alphabeta search.
-        :return: The minimax value of the node state.
-        :rtype: str
-    """
-
-    if(depth = 0): #still need to add the terminal state case. (mu(node.state)==null)
-        v = heuristic(node)
-    elif(player==0):
-        #   MAX player
-        v = -999999
-
-        node.compute_and_get_children()
-
-        for child in node.children: #   might be compressible by only the compute_and_get_children() function
-            v = max(v, alphabeta(child, depth-1, alpha, beta, player=1))
-            alpha = max(alpha, v)
-            if(beta <= alpha):
-                break
-
-    elif(player==1):
-        #   Min player
-        v = 999999
-
-        node.compute_and_get_children()
-
-        for child in node.children: #   might be compressible by only the compute_and_get_children() function
-            v = min(v, alphabeta(child, depth-1, alpha, beta, player=0))
-            beta = min(beta, v)
-            if(beta <= alpha):
-                break
-
-    return v
 
 class PlayerControllerHuman(PlayerController):
     def player_loop(self):
@@ -110,8 +30,6 @@ class PlayerControllerMinimax(PlayerController):
 
     def __init__(self):
         super(PlayerControllerMinimax, self).__init__()
-
-    
 
     def player_loop(self):
         """
@@ -154,15 +72,92 @@ class PlayerControllerMinimax(PlayerController):
 
         Please note that the number of fishes and their types is not fixed between test cases.
         """
-        print("Initial_data length: " + str(len(initial_data)))
-        print(initial_data['game_over'])
-        for element in initial_data:
-            print(element)
-
 
         return None
 
-    
+    def heuristic(self, state):
+        """
+        Computes the heuristic of a given state
+        """
+        scores = state.player_scores
+
+        h = scores[0] - scores[1]
+
+        return h
+
+    def alphabeta(self, alpha, beta, node, depth, player, start, seen_nodes):
+        """
+        Performs the alpha beta pruning search algorithm
+        """
+
+        hash = self.hash_state(node.state)
+        if(hash in seen_nodes):
+            return seen_nodes[hash]
+
+        #children = sorted(node.state.compute_and_get_children(), key=heuristic, reverse=True)
+        children = node.state.compute_and_get_children()
+
+        if(depth == 0 or not children):
+            v = self.heuristic(node.state)
+        elif player == 0:
+            pass
+        else:
+            pass
+
+
+        seen_nodes[hash] = v
+
+        return v
+
+    def hash_state(self, state):
+        """
+        Computes the hash of a state
+        :param state: Node state
+        :type state: game_tree.State
+        :return: Hash of the state
+        :rtype: str
+        """
+
+        return str(state.player) + str(state.get_fish_positions()) + str(state.get_hook_positions())
+
+    def check_timeout(self, start):
+        """
+        Raises a TimeoutError exception if the search time has exceeded 50ms
+        """
+
+        if(time.time()-start > 0.05):
+            raise TimeoutError
+
+    def depth_search(self, node, depth, start, seen_nodes):
+        """
+        Performs an alpha-beta pruning search for depth layers
+        :param node: Root node
+        :type node: game_tree.Node
+        :param depth: Number of layers deep to search
+        :type depth: int
+        :param start: Start time of the search
+        :type start: datetime.time
+        :param seen_nodes: Already visited nodes
+        :type seen_nodes: dict
+        :return: Encoded move that leads to the best scoring node
+        :rtype: int
+        """
+
+        alpha = float('-inf')
+        beta = float('inf')
+
+        children = node.compute_and_get_children()
+        scores = []
+
+        for child in children:
+            self.check_timeout(start)
+            score = self.alphabeta(alpha, beta, child, depth, node.player, start, seen_nodes)
+            scores.append(score)
+
+        best_score_idx = scores.index(max(scores))
+
+        return children[best_score_idx].move
+
 
     def search_best_next_move(self, model, initial_tree_node):
         """
@@ -176,38 +171,18 @@ class PlayerControllerMinimax(PlayerController):
         :rtype: str
         """
 
-        # EDIT THIS METHOD TO RETURN BEST NEXT POSSIBLE MODE FROM MINIMAX MODEL ###
-        
-        # NOTE: Don't forget to initialize the children of the current node 
-        #       with its compute_and_get_children() method!
+        initial_time = time.time()
+        seen_nodes = dict() # Maybe put move this to depth search to make it clean.
+        depth = 0
+        timeout = False
 
-        random_move = random.randrange(5)
-
-        t1 = time.time()
-
-        
-
-        initial_tree_node.compute_and_get_children()
-
-        for child in initial_tree_node.children:
-            compute_heuristic(child)
-
-        #next_state = initial_tree_node.compute_next_state(initial_tree_node, 3, initial_tree_node.observations)
-
-        #print(next_state)
-        #print(children)
-
-        # len(children) appears to be always 5.
-
-        #How to implement timeout? Maybe signals?
-
-        t2 = time.time()
-
-        print("Total runtime: {:.2f}ms".format((t2-t1)*1000))
-
-
+        while not timeout:
+            try:
+                best_move = self.depth_search(initial_tree_node, depth, seen_nodes, initial_time)
+                seen_nodes.clear()
+                depth+=1
+            except:
+                timeout = True
 
         # 0: "stay", 1: "up", 2: "down", 3: "left", 4: "right"
-        return ACTION_TO_STR[random_move]
-
-    
+        return ACTION_TO_STR[best_move]
