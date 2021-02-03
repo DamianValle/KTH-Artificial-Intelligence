@@ -150,7 +150,7 @@ class PlayerControllerMinimax(PlayerController):
         scores = []
 
         for child in children:
-            self.check_timeout(start)
+            self.check_timeout(start) 
             score = self.alphabeta(alpha, beta, child, depth, node.player, start, seen_nodes)
             scores.append(score)
 
