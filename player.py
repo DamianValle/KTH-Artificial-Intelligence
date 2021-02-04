@@ -75,49 +75,76 @@ class PlayerControllerMinimax(PlayerController):
 
         return None
 
-    def heuristic(self, state):
+    def l1_distance(self, fish_position, hook_positions):
         """
-        Computes the heuristic of a given state
+        Computes the distance from the hook to the fish position 
+        taking into account the opponent in the middle
         """
-        scores = state.player_scores
 
-        h = scores[0] - scores[1]
+        player_hook = hook_positions[0]
+        opponent_hook = hook_positions[1]
 
-        # score / distance to closest fish
+        x = abs(player_hook[0] - fish_position[0])
+        y = abs(player_hook[1] - fish_position[1])
 
-        return h
+        if player_hook[0] < opponent_hook[0] <= fish_position[0] or fish_position[0] <= opponent_hook[0] < player_hook[0]:
+            x = 20 - x
 
-    def alphabeta(self, alpha, beta, node, depth, player, seen_nodes):
+        return x + y
+
+    def heuristic(self, node):
+        """
+        Computes the heuristic of a given node
+        """
+
+        total_score = node.state.player_scores[0] - node.state.player_scores[1]
+
+        len_fish = len(node.state.fish_positions)
+
+        if len_fish==0:
+            return 100*total_score
+
+        h = 0
+        for fish, position in node.state.fish_positions.items():
+            distance = self.l1_distance(position, node.state.get_hook_positions())
+            # len(node.state.fish_positions.items())==1???
+            if(distance==0 and len_fish ==1 and node.state.fish_scores[fish] > 0): 
+                return float('inf')
+            h += 5 * node.state.fish_scores[fish] / (distance + (distance==0))
+
+        return 10 * total_score + 5 * (h / len_fish) - len_fish
+
+    def alphabeta(self, alpha, beta, node, depth, player, seen_nodes, initial_time):
         """
         Performs the alpha beta pruning search algorithm
         """
 
-        #print("alphabeta with depth:{}, player:{}.".format(depth, player))
+        self.check_timeout(initial_time)
+
         hash = self.hash_state(node.state)
         if(hash in seen_nodes):
             return seen_nodes[hash]
 
-        #children = sorted(node.state.compute_and_get_children(), key=heuristic, reverse=True)
-        children = node.compute_and_get_children()
+        children = sorted(node.compute_and_get_children(), key=self.heuristic, reverse=True)
 
         if(depth == 0 or not children):
-            v = self.heuristic(node.state)
+            v = self.heuristic(node)
         elif player == 0:
             v = float('-inf')
             for child in children:
-                v = max(v, self.alphabeta(alpha, beta, child, depth - 1, 1, seen_nodes))
+                v = max(v, self.alphabeta(alpha, beta, child, depth - 1, 1, seen_nodes, initial_time))
                 alpha = max(alpha, v)
                 if(alpha >= beta):
                     break
         else:
             v = float('inf')
             for child in children:
-                v = min(v, self.alphabeta(alpha, beta, child, depth-1, 0, seen_nodes))
+                v = min(v, self.alphabeta(alpha, beta, child, depth-1, 0, seen_nodes, initial_time))
                 beta = min(beta, v)
                 if(alpha >= beta):
                     break
 
-        #seen_nodes[hash] = v
+        seen_nodes[hash] = v
         return v
 
     def hash_state(self, state):
@@ -137,7 +164,7 @@ class PlayerControllerMinimax(PlayerController):
         Raises a TimeoutError exception if the search time has exceeded 50ms
         """
 
-        if(time.time()-initial_time > 0.05):
+        if(time.time()-initial_time > 0.06):
             raise TimeoutError
 
     def depth_search(self, node, depth, initial_time, seen_nodes):
@@ -162,8 +189,7 @@ class PlayerControllerMinimax(PlayerController):
         scores = []
 
         for child in children:
-            self.check_timeout(initial_time)
-            score = self.alphabeta(alpha, beta, child, depth, node.player, seen_nodes)
+            score = self.alphabeta(alpha, beta, child, depth, node.player, seen_nodes, initial_time)
             scores.append(score)
 
         best_score_idx = scores.index(max(scores))
@@ -191,12 +217,10 @@ class PlayerControllerMinimax(PlayerController):
 
         while not timeout:
             try:
-                print(depth)
                 best_move = self.depth_search(initial_tree_node, depth, initial_time, seen_nodes)
                 seen_nodes.clear()
                 depth+=1
             except:
-                print("timeout")
                 timeout = True
 
         # 0: "stay", 1: "up", 2: "down", 3: "left", 4: "right"
