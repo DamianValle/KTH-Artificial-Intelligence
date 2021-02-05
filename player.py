@@ -87,7 +87,7 @@ class PlayerControllerMinimax(PlayerController):
         x = abs(player_hook[0] - fish_position[0])
         y = abs(player_hook[1] - fish_position[1])
 
-        if player_hook[0] < opponent_hook[0] <= fish_position[0] or fish_position[0] <= opponent_hook[0] < player_hook[0]:
+        if fish_position[0] >= opponent_hook[0]:     # This assumes that the player boat is on the left.
             x = 20 - x
 
         return x + y
@@ -102,7 +102,7 @@ class PlayerControllerMinimax(PlayerController):
         len_fish = len(node.state.fish_positions)
 
         if len_fish==0:
-            return 100*total_score
+            return 1000*total_score
 
         h = 0
         for fish, position in node.state.fish_positions.items():
