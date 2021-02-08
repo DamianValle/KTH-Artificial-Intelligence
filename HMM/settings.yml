@@ -1,0 +1,5 @@
+## Game frame rate. Default: 20
+frames_per_second: 20
+
+# Window size is scale * (800, 600)
+window_scale: 1.0
