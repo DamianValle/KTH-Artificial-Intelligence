@@ -1,0 +1,395 @@
+#:import exit sys.exit
+
+<FishingDerby>:
+    sea: sea
+    Seagulls:
+        pos_hint: {'center_x': 0.5, 'top': 0.9}
+        size_hint: 0.1, 0.1
+    WavesBack:
+        pos_hint: {'right': 1.0, 'top': 0.83}
+        size_hint_y: 0.15
+    FloatLayout:
+        id: boats_layout
+    WavesFront:
+        pos_hint: {'right': 1.0, 'center_y': 0.75}
+        size_hint_y: 0.15
+    Sea:
+        id: sea
+        size_hint_y: 0.70
+        pos: 0, 0
+
+        Sand:
+            pos_hint: {'right': 1.0, 'bottom': 0}
+            size_hint_y: 0.15
+        SeaWeed1:
+            id: sw1a
+            pos_hint: {'right': 0.8, 'y': -0.02}
+        SeaWeed2:
+            id: sw1b
+            pos_hint: {'right': 0.7, 'y': -0.02}
+        SeaWeed3:
+            id: sw2a
+            pos_hint: {'right': 0.27, 'y': -0.02}
+        #SeaWeed4:
+        #    id: sw2b
+        #    pos_hint: {'right': 0.7, 'y': -0.02}
+        SeaWeed5:
+            id: sw3a
+            pos_hint: {'right': 0.90, 'y': -0.02}
+        SeaWeed6:
+            id: sw3b
+            pos_hint: {'right': 0.6, 'y': -0.02}
+        SeaWeed7:
+            id: sw3c
+            pos_hint: {'right': 0.35, 'y': -0.02}
+
+        Rock:
+            id: rock
+            pos_hint: {'right': 0.5, 'y': -0.02}
+
+        Star:
+            id: star
+            pos_hint: {'right': 0.4, 'y': 0.04}
+
+        FloatLayout:
+            size_hint_y: 1.0
+            pos: 0, 0
+            id: diver_layout
+
+    FloatLayout:
+        id: hooks_layout
+        size_hint_y: 0.70
+        pos: 0, 0
+    FloatLayout:
+        id: line_rods_layout
+        size_hint_y: 0.70
+        pos: 0, 0
+    FloatLayout:
+        size_hint_y: 0.70
+        pos: 0, 0
+        id: jelly_layout
+
+    FloatLayout:
+        id: fish_layout
+        size_hint_y: 0.70
+        pos: 0, 0
+    FloatLayout:
+        AnchorLayout:
+            anchor_x: "left"
+            anchor_y: "bottom"
+            GreenCrab:
+                id: crab0
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "bottom"
+            RedCrab:
+                id: crab1
+
+<Sea@FloatLayout>:
+    canvas:
+        Color:
+            rgba: 0, 0, 1, 1
+
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
+<WavesFront@Widget>:
+    canvas:
+        Color:
+            rgba: 0, 0, 1, 1
+
+        Ellipse:
+            pos: self.pos[0] - self.size[0] / 5, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0], self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + self.size[0] / 5, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 2 * self.size[0] / 5, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 3 * self.size[0] / 5, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 4 * self.size[0] / 5, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+<WavesBack@Widget>:
+    canvas:
+        Color:
+            rgba: 0, 0, 0.4, 1
+
+        Ellipse:
+            pos: self.pos[0] - self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 1 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 2 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 3 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 4 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 5 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+<Sand@Widget>:
+    canvas:
+        Color:
+            rgba: 226 / 255, 216 / 250, 150 / 250, 1.0
+
+        Ellipse:
+            pos: self.pos[0] - self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 1 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 2 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 3 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 4 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+        Ellipse:
+            pos: self.pos[0] + 5 * self.size[0] / 5 - self.size[0] / 8, self.pos[1] - self.size[1] / 2
+            size: self.size[0] * 0.25, self.size[1]
+            angle_start: -90
+            angle_end: 90
+
+<Boat>:
+    allow_stretch: True
+    size_hint: 0.25, 0.25
+
+<Fish>:
+    size_hint: 0.1, 0.1
+    canvas.before:
+        PushMatrix
+        Scale:
+            origin: self.center
+            x: self.orientation
+    canvas.after:
+        PopMatrix
+
+<Fish1@Fish>:
+    source: 'fishing_game_core/images/fish1.png'
+
+<Fish2@Fish>:
+    source: 'fishing_game_core/images/fish2.png'
+
+<Fish3@Fish>:
+    source: 'fishing_game_core/images/fish3.png'
+
+<Fish4@Fish>:
+    source: 'fishing_game_core/images/fish4.png'
+
+<Fish5@Fish>:
+    source: 'fishing_game_core/images/fish5.png'
+
+<Fish6@Fish>:
+    source: 'fishing_game_core/images/fish6.png'
+
+<Fish7@Fish>:
+    source: 'fishing_game_core/images/fish7.png'
+
+<King@Fish>:
+    source: 'fishing_game_core/images/king_fish.png'
+
+<SeaWeed>:
+<SeaWeed@Image>:
+    allow_stretch: True
+    size_hint: 0.2, 0.2
+
+<SeaWeed1@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed1.png'
+
+<SeaWeed2@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed2.png'
+
+<SeaWeed3@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed1.png'
+
+<SeaWeed4@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed2.png'
+
+<SeaWeed5@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed4.png'
+
+<SeaWeed6@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed3.png'
+
+<SeaWeed7@SeaWeed>:
+    source: 'fishing_game_core/images/seaweed4.png'
+
+<Seagulls@Image>:
+    source: 'fishing_game_core/images/seagulls.png'
+
+<Rock@Image>:
+    allow_stretch: True
+    size_hint: 0.25, 0.25
+    source:'fishing_game_core/images/rock.png'
+
+<Star@Image>:
+    allow_stretch: True
+    size_hint: 0.1, 0.1
+    source:'fishing_game_core/images/star.png'
+
+<Crab>:
+    allow_stretch: True
+    keep_ratio: False
+    size_hint: 0.12, 0.18
+    Label:
+        markup: True
+        text: self.parent.score
+        size: self.parent.size[0], 100
+        font_size: self.size[0] * 0.25
+        text_size: self.size
+        pos: self.parent.x + self.size[0] / 2.7, self.parent.center_y - self.parent.size[1]/3
+
+<GreenCrab@Crab>:
+    source: 'fishing_game_core/images/crab1.png'
+
+<RedCrab@Crab>:
+    source: 'fishing_game_core/images/crab2.png'
+
+<Diver>:
+    allow_stretch: True
+    keep_ratio: False
+    size_hint: 0.10, 0.20
+
+<GreenDiver>:
+    source: 'fishing_game_core/images/diver1.png'
+
+<RedDiver>:
+    source: 'fishing_game_core/images/diver2.png'
+
+<Hook>:
+    source: 'fishing_game_core/images/hook.png'
+    size_hint: 0.05, 0.05
+
+<LineRod>:
+    canvas:
+        Color:
+            rgba: self.color
+        Line:
+            points: [self.center_x, self.y, self.center_x, self.top]
+            width: 3
+
+<TimeBoard>:
+    size_hint: 0.5, 0.5
+    Label:
+        pos_hint: {'center_x': 0.88, 'center_y': 2.3}
+        id: label
+        markup: True
+        text: root.text
+        font_size: self.size[0] * 0.1
+        text_size: self.size
+
+<Jellyfish>:
+    size_hint: 0.1, 0.1
+    canvas.before:
+        PushMatrix
+        Scale:
+            origin: self.center
+            x: self.orientation
+    canvas.after:
+        PopMatrix
+
+<JellySmile@Jellyfish>:
+    source: 'fishing_game_core/images/jelly_smile.png'
+
+<JellyHurt@Jellyfish>:
+    source: 'fishing_game_core/images/jelly_hurt.png'
+
+<StatsContent>:
+    text: ""
+    BoxLayout:
+        id: layout
+        padding: root.height / 10, root.height / 10
+        orientation: 'vertical'
+        Label:
+            halign: 'left'
+            valign: 'top'
+            text_size: self.size
+            font_size: 28
+            text: root.text
+            markup: True
+
+<ExitButton>:
+    text: "Exit"
+    font_size: 32
+    size_hint_y: 0.1
+    on_release: exit(0)

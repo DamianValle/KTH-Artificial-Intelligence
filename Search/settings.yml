@@ -1,0 +1,8 @@
+# Observations file
+observations_file: "observations/test_0.json"
+#observations_file: "observations/test_1.json"
+#observations_file: "observations/test_2.json"
+#observations_file: "observations/test_3.json"
+
+## Player type or nature. Possible values: "ai_minimax" or "human". Default: "ai_minimax"
+player_type: "ai_minimax"
