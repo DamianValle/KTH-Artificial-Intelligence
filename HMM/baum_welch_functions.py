@@ -1,10 +1,10 @@
 import math
 
 def f_create_matrix(p_matrix_item):
-    l_matrix_list   = list(p_matrix_item.split())
-    l_matrix_elem   = list(map(float, l_matrix_list[2:]))
-    l_rows          = int(l_matrix_list[0])
-    l_cols          = int(l_matrix_list[1])
+    #l_matrix_list   = list(p_matrix_item.split())
+    l_matrix_elem   = list(map(float, p_matrix_item[2:]))
+    l_rows          = int(p_matrix_item[0])
+    l_cols          = int(p_matrix_item[1])
     l_matrix        = []
     for i_row in range(l_rows):
         t_row_list = []
