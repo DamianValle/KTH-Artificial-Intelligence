@@ -1,0 +1,62 @@
+# rewards: [golden_fish, jellyfish_1, jellyfish_2, ... , step]
+rewards: [20, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -1]
+
+## Initial position of the diver. Default: [1, 8]
+init_pos_diver: [1, 8]
+
+## Game frames per second. Default: 60 Recommended: 1000
+frames_per_second: 10000
+
+## Player type or nature. Possible values: "ai_rl" or "random". Default: "ai_rl"
+player_type: "random"
+# player_type: "ai_rl"
+
+## Q learning learning rate
+alpha: 0.1
+
+## Q learning discount rate
+gamma: 0.1
+
+# Disables the graphical engine of the simulator (true by default)
+headless: true
+
+## Epsilon initial
+epsilon_initial: 1
+
+## Epsilon final
+epsilon_final: 1
+
+## Annealing timesteps
+annealing_timesteps: 1000
+
+## threshold
+threshold: 1e-6
+
+# Position of the jellyfishes
+jelly_x: [3, 3, 4, 4, 4, 4, 5, 5, 8, 7, 8]
+jelly_y: [4, 5, 8, 8, 7, 5, 8, 8, 8, 5, 4]
+
+# Position of the king fish
+pos_king: [8, 5]
+
+# Window scale size as a multiple of 800x600
+window_scale: 1.0
+
+# Duration of the game in seconds
+time: 60
+
+# Stochasticity
+# This will indicate if the diver is under the effects of stream in the sea
+stoch: false
+
+# Episode length in steps
+episode_len: 100
+
+# Max episodes
+episode_max: 1000
+
+# Visualize exploration (slow, just for debugging)
+visualize_exploration: true
+#seed of the experience
+# seed: 0
+# seed: 2910399478

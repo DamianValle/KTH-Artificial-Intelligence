@@ -1,0 +1,31 @@
+# rewards: [golden_fish, jellyfish_1, jellyfish_2, ... , step]
+rewards: [50, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -2]
+
+## Initial position of the diver. Default: [1, 8]
+init_pos_diver: [1, 8]
+
+# Position of the jellyfishes
+jelly_x: [3,  3,  4,  4,  4,  4,  5,  5,  8,  7,  8]
+jelly_y: [4,  5,  8,  8,  7,  5,  8,  8,  8,  5,  4]
+
+# Position of the king fish
+pos_king: [8, 5]
+
+## Q learning learning rate 
+alpha: 0
+
+## Q learning discount rate
+gamma: 0
+
+## Epsilon initial
+epsilon_initial: 1
+
+## Epsilon final
+epsilon_final: 1
+
+## Annealing timesteps
+annealing_timesteps: 1
+
+## threshold
+threshold: 1e-6
+
