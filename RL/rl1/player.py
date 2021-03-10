@@ -318,8 +318,8 @@ class PlayerControllerRandom(PlayerController):
                 current_total_steps += 1
                 steps += 1
 
-            #print("Episode: {}, Steps {}, Total Reward: {}, Total Steps {}".
-            #      format(episode, steps, R_total, current_total_steps))
+            print("Episode: {}, Steps {}, Total Reward: {}, Total Steps {}".
+                  format(episode, steps, R_total, current_total_steps))
             episode += 1
             end_episode = False
 

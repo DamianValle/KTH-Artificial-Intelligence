@@ -18,7 +18,7 @@ alpha: 0.1
 gamma: 0.1
 
 # Disables the graphical engine of the simulator (true by default)
-headless: true
+headless: false
 
 ## Epsilon initial
 epsilon_initial: 1
