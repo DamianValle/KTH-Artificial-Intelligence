@@ -1,8 +1,3 @@
-Artificial Intelligence DD2380
-
-A1 - Minimax
-===
-
 # Objective
 The objective of this assignment is to implement the Minimax search algorithm for the best next
  possible move in the KTH Fishing Derby game tree.
