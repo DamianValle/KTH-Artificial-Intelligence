@@ -1,0 +1,111 @@
+%%  citizens(-Solution)
+%   @param  Solution is a list of citizens that satisfy all constraints.
+
+/* 4 citizens logical puzzle: 
+* 
+* The constants:
+* Citizens: c1, c2, c3, c4
+* Age: 20, 40, 70, 90
+* Profession: doctor, nurse, teacher, driver
+* Vaccine: vac90, vac99
+* Hospitals: karolinska, sodersjukhuset, sofiahemmet
+
+* 
+* We define that:
+*  Two people are in the same group if they receive the same vaccine.
+*  Two people go to the same hospital if they get vaccinated there.
+* 
+* And we know the following facts:
+*  F1- c1 is a doctor.
+*  F2- c3 is 20 years old.
+*  F3- c2 is a teacher.
+*  F4- A citizen goes to karolinska to get vac99 but not c4.
+*  F5- The teacher gets vaccinated in sofiahemmet.
+*  F6- The nurse gets vaccinated in karolinska.
+*  F7- The citizen aged 70 goes to the same hospital as c3.
+*  F8- A citizen gets vac60 in sodersjukhuset.
+*  F9- The citizen aged 40 is not in the same group as c2.
+*  F10- The driver goes to the same hospital as c4.
+*  F11- The citizens aged 70 and 90 are in the same group.
+*/
+
+/*
+*  F10- A citizen vaccinated in the same hospital as c4 is a driver.
+*/
+
+% Render the houses term as a nice table.
+:- use_rendering(table,[header(p('Citizen', 'Age', 'Profession', 'Vaccine', 'Hospital'))]).
+
+
+% Two people are in the same group if they receive the same vaccine.
+sameGroup(C1, C2, Ls) :-			
+    member(p(C1, _, _, X, _),Ls),
+    member(p(C2, _, _, Y, _),Ls),
+    not(C1 == C2),
+    X = Y.
+
+% Two people go to the same hospital if they get vaccinated there.
+sameHospital(C1, C2, Ls) :-			
+    member(p(C1, _, _, _, X),Ls),
+    member(p(C2, _, _, _, Y),Ls),
+    not(C1 == C2),
+    X = Y.
+
+% The facts:
+fact1(Ls) :-
+    member(p(c1, _, doctor, _, _), Ls).
+fact2(Ls) :-
+    member(p(c3,20,_,_,_), Ls).
+fact3(Ls) :-
+    member(p(c2,_,teacher,_,_), Ls).
+fact4(Ls) :-
+    member(p(C, _, _, vac99, karolinska), Ls),
+    not(C == c4).
+fact5(Ls) :-
+    member(p(_,_,teacher,_,sofiahemmet), Ls).
+fact6(Ls) :-
+    member(p(_,_,nurse,_,karolinska), Ls).
+fact7(Ls) :-
+    member(p(P,70,_,_,_), Ls),
+    sameHospital(P, c3, Ls).
+fact8(Ls) :-
+    member(p(_,_,_,vac60,sodersjukhuset), Ls).
+fact9(Ls) :-
+    member(p(C,40,_,_,_), Ls),
+    not(sameGroup(C, c2, Ls)).
+fact10(Ls) :-
+    member(p(C,_,driver,_,_), Ls),
+    sameHospital(C, c4, Ls).
+fact11(Ls) :-
+    member(p(C1,70,_,_,_), Ls),
+    member(p(C2,90,_,_,_), Ls),
+    sameGroup(C1, C2, Ls).
+
+% Problem:
+citizens(Ls) :-
+    % There are 4 citizens in our list Ls
+    length(Ls, 4),
+    % One of them is c1, one is c2, one is c3 and one is c4
+    member(p(c1,_,_,_,_), Ls), member(p(c2,_,_,_,_), Ls), member(p(c3,_,_,_,_), Ls), member(p(c4,_,_,_,_), Ls),
+    % One of them is 20, one is 40, one is 70 and one is 90
+    member(p(_,20,_,_,_), Ls), member(p(_,40,_,_,_), Ls), member(p(_,70,_, _,_), Ls), member(p(_,90,_, _,_), Ls), 
+    % One of them is a doctor, one is a nurse, one is a teacher and one is a driver
+    member(p(_,_,doctor,_,_), Ls), member(p(_,_,nurse, _,_), Ls), member(p(_,_,teacher, _,_), Ls), member(p(_,_,driver, _,_), Ls),
+    % Some get the vaccine vac60 and some get vac99
+    member(p(_,_,_, vac60,_), Ls), member(p(_,_,_, vac99,_), Ls),
+    % Some go to karolinska, some to sodersjukhuset and some to sofiahemmet
+    member(p(_,_,_, _,karolinska), Ls), member(p(_,_,_, _,sodersjukhuset), Ls), member(p(_,_,_, _,sofiahemmet), Ls),
+   	fact1(Ls),
+    fact2(Ls),
+    fact3(Ls),
+    fact4(Ls),
+    fact5(Ls),
+    fact6(Ls),
+    fact7(Ls),
+    fact8(Ls),
+    fact9(Ls),
+    fact10(Ls),
+    fact11(Ls),
+    !.
+ 
+%To see the results, run ?- citizens(Ls).
